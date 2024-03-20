@@ -37,85 +37,89 @@ class CoinDetails extends StatelessWidget {
               ],
             )),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              coin.symbol.toUpperCase(),
-              style: const TextStyle(fontSize: 28),
-            ),
-            const Padding(padding: EdgeInsets.only(bottom: 15)),
-            Row(
+      body: ListView(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
               children: [
                 Text(
-                  "EUR${currencyFormatter.format(coin.priceVsEur)}",
-                  style: const TextStyle(fontSize: 25),
+                  coin.symbol.toUpperCase(),
+                  style: const TextStyle(fontSize: 28),
                 ),
-                const Spacer(),
+                const Padding(padding: EdgeInsets.only(bottom: 15)),
+                Row(
+                  children: [
+                    Text(
+                      "EUR${currencyFormatter.format(coin.priceVsEur)}",
+                      style: const TextStyle(fontSize: 25),
+                    ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: isUp ? Colors.green : Colors.red),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isUp
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "${NumberFormat("####.##").format(coin.priceChange24Percentage)}%",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const Padding(padding: EdgeInsets.only(top: 25)),
+                CoinMarketChart(coinId: coin.id),
+                const Padding(padding: EdgeInsets.only(bottom: 20)),
                 Container(
-                  padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: isUp ? Colors.green : Colors.red),
-                  child: Row(
-                    children: [
-                      Icon(
-                        isUp
-                            ? Icons.keyboard_arrow_up
-                            : Icons.keyboard_arrow_down,
-                        color: Colors.white,
-                      ),
-                      Text(
-                        "${NumberFormat("####.##").format(coin.priceChange24Percentage)}%",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ],
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black87,
+                  ),
+                  child: DefaultTextStyle(
+                      style: const TextStyle(color: Colors.white),
+                      child: MarketInfoRows(coin.id, currencyFormatter)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(10),
+                      backgroundColor: Colors.yellow,
+                    ),
+                    icon: const Icon(
+                      Icons.favorite,
+                      color: Colors.black87,
+                    ),
+                    label: const Text(
+                      "Follow coin",
+                      style: TextStyle(color: Colors.black87),
+                    ),
+                    onPressed: () {
+                      onFollowingCoin(context, coin.id);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Following ${coin.name}"),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
             ),
-            const Padding(padding: EdgeInsets.only(top: 25)),
-            CoinMarketChart(coinId: coin.id),
-            const Padding(padding: EdgeInsets.only(bottom: 20)),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.black87,
-              ),
-              child: DefaultTextStyle(
-                  style: const TextStyle(color: Colors.white),
-                  child: MarketInfoRows(coin.id, currencyFormatter)),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 25),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(10),
-                  backgroundColor: Colors.yellow,
-                ),
-                icon: const Icon(
-                  Icons.favorite,
-                  color: Colors.black87,
-                ),
-                label: const Text(
-                  "Follow coin",
-                  style: TextStyle(color: Colors.black87),
-                ),
-                onPressed: () {
-                  onFollowingCoin(context, coin.id);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Following ${coin.name}"),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
