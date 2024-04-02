@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cryptoapp/src/cfg/models.dart';
+import 'package:cryptoapp/src/cfg/token.dart';
 import 'package:http/http.dart' as http;
 
 class ApiClient {
@@ -8,7 +9,7 @@ class ApiClient {
 
   Future<Coin> getCoin(String coinId, {bool localization = false}) async {
     final response = await http.get(Uri.parse(
-        "$baseUrl/coins/$coinId?x_cg_demo_api_key=CG-pwmwZs2wnsKuTmftserUCWbn&localization=$localization&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"));
+        "$baseUrl/coins/$coinId?${Token.token}&localization=$localization&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"));
     if (response.statusCode == 200) {
       return Coin.fromJson(jsonDecode(response.body));
     } else {
@@ -21,7 +22,7 @@ class ApiClient {
     String interval = "daily";
 
     final response = await http.get(Uri.parse(
-        "$baseUrl/coins/$coinId/market_chart?x_cg_demo_api_key=CG-pwmwZs2wnsKuTmftserUCWbn&vs_currency=eur&days=$days&interval=$interval"));
+        "$baseUrl/coins/$coinId/market_chart?${Token.token}&vs_currency=eur&days=$days&interval=$interval"));
     if (response.statusCode == 200) {
       return MarketChart.fromJson(jsonDecode(response.body));
     } else {
@@ -31,7 +32,7 @@ class ApiClient {
 
   Future<CoinMarketInfo> getCoinMarketInfo(String coinId) async {
     final response = await http.get(Uri.parse(
-        "$baseUrl/coins/$coinId?x_cg_demo_api_key=CG-pwmwZs2wnsKuTmftserUCWbn&localization=false&tickers=false&market_data=true&community_data=true&developer_data=true&sparkline=false"));
+        "$baseUrl/coins/$coinId?${Token.token}&localization=false&tickers=false&market_data=true&community_data=true&developer_data=true&sparkline=false"));
     if (response.statusCode == 200) {
       return CoinMarketInfo.fromJson(jsonDecode(response.body));
     } else {
